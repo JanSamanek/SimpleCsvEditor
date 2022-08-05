@@ -10,19 +10,45 @@ namespace Editor
         public Form1()
         {
             InitializeComponent();
+            this.csvDataGridView.DragDrop += new DragEventHandler(this.csvDataGridView_DragDrop);
+            this.csvDataGridView.DragEnter += new DragEventHandler(this.csvDataGridView_Enter);
         }
 
-        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        private void csvDataGridView_Enter(object sender, DragEventArgs e)
         {
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                var filename = openFileDialog.FileName;
+                string[] fileList = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                using (var streamer = new StreamReader(filename))
+                foreach(string file in fileList)
                 {
-                    using (var csvReader = new CsvReader(streamer, CultureInfo.InvariantCulture))
+                    loadCsvData(file);
+                    csvDataGridView.DataSource = dt;
+                }
+            }
+        }
+
+        private void csvDataGridView_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.All;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void loadCsvData(string filename)
+        {
+            using (var streamer = new StreamReader(filename))
+            {
+                using (var csvReader = new CsvReader(streamer, CultureInfo.InvariantCulture))
+                {
+                    try
                     {
+
                         csvReader.Read();
                         csvReader.ReadHeader();
                         string[] headerRow = csvReader.Context.Reader.HeaderRecord;
@@ -33,7 +59,7 @@ namespace Editor
                             dt.Columns.Add(header);
                         }
 
-                        var records = csvReader.GetRecords<dynamic>().ToList();
+                        var records = csvReader.GetRecords<dynamic>();
 
                         foreach (var record in records)
                         {
@@ -46,8 +72,23 @@ namespace Editor
                             }
                             dt.Rows.Add(dr);
                         }
+
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Please load a csv file.");
                     }
                 }
+            }
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                var filename = openFileDialog.FileName;
+                loadCsvData(filename);
             }
 
             csvDataGridView.DataSource = dt;
@@ -63,7 +104,7 @@ namespace Editor
             
             saveFileDialog.InitialDirectory =@"C:\";
             saveFileDialog.Title = "Save csv Files";
-            //saveFileDialog.Filter = "csv";
+            saveFileDialog.Filter = "csv files (*.csv)|*.csv";
             saveFileDialog.CheckFileExists = false;
             saveFileDialog.CheckPathExists = true;
             saveFileDialog.DefaultExt = "csv";
@@ -97,6 +138,12 @@ namespace Editor
                     }
                 }
             }
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataTable dt = new DataTable();
+            csvDataGridView.DataSource = dt;
         }
     }
 }

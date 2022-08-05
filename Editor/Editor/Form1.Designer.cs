@@ -58,6 +58,7 @@
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
@@ -82,6 +83,8 @@
             // 
             // csvDataGridView
             // 
+            this.csvDataGridView.AllowDrop = true;
+            this.csvDataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.csvDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.csvDataGridView.Location = new System.Drawing.Point(12, 27);
             this.csvDataGridView.Name = "csvDataGridView";
