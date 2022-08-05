@@ -60,38 +60,41 @@ namespace Editor
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            /*
+            
             saveFileDialog.InitialDirectory =@"C:\";
             saveFileDialog.Title = "Save csv Files";
             //saveFileDialog.Filter = "csv";
-            saveFileDialog.CheckFileExists = true;
+            saveFileDialog.CheckFileExists = false;
             saveFileDialog.CheckPathExists = true;
             saveFileDialog.DefaultExt = "csv";
             saveFileDialog.RestoreDirectory = true;
-            */
-
-            string filename = @"C:\Users\jands\Documents";
-            using (var writer = new StreamWriter(filename))
+          
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
-                {
-                    // Write columns
-                    foreach (DataColumn column in dt.Columns)
-                    {
-                        csv.WriteField(column.ColumnName);
-                    }
-                    csv.NextRecord();
+                string filename = saveFileDialog.FileName;
 
-                    // Write row values
-                    foreach (DataRow row in dt.Rows)
+                using (var writer = new StreamWriter(filename))
+                {
+                    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                     {
-                        for (var i = 0; i < dt.Columns.Count; i++)
+                        // Write columns
+                        foreach (DataColumn column in dt.Columns)
                         {
-                            csv.WriteField(row[i]);
+                            csv.WriteField(column.ColumnName);
                         }
                         csv.NextRecord();
-                    }
 
+                        // Write row values
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            for (var i = 0; i < dt.Columns.Count; i++)
+                            {
+                                csv.WriteField(row[i]);
+                            }
+                            csv.NextRecord();
+                        }
+
+                    }
                 }
             }
         }

@@ -50,11 +50,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jands\\source\\repos\\Editor\\Editor\\Editor.csproj",
+      "projectUniqueName": "C:\\Users\\jands\\SimpleCsvEditor\\Editor\\Editor\\Editor.csproj",
       "projectName": "Editor",
-      "projectPath": "C:\\Users\\jands\\source\\repos\\Editor\\Editor\\Editor.csproj",
+      "projectPath": "C:\\Users\\jands\\SimpleCsvEditor\\Editor\\Editor\\Editor.csproj",
       "packagesPath": "C:\\Users\\jands\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jands\\source\\repos\\Editor\\Editor\\obj\\",
+      "outputPath": "C:\\Users\\jands\\SimpleCsvEditor\\Editor\\Editor\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\jands\\AppData\\Roaming\\NuGet\\NuGet.Config",

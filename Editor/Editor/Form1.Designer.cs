@@ -35,6 +35,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.csvDataGridView = new System.Windows.Forms.DataGridView();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.csvDataGridView)).BeginInit();
             this.SuspendLayout();
@@ -119,5 +120,6 @@
         private ToolStripMenuItem exitToolStripMenuItem;
         private DataGridView csvDataGridView;
         private OpenFileDialog openFileDialog;
+        private SaveFileDialog saveFileDialog;
     }
 }
