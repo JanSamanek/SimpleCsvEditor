@@ -6,7 +6,11 @@ namespace Editor
 {
     public partial class Form1 : Form
     {
-        DataTable dt = new DataTable();
+        DataSet dataSet = new DataSet();
+        DataTable dtFinal = new DataTable();
+
+
+        int recordNum = 0;
         public Form1()
         {
             InitializeComponent();
@@ -23,8 +27,13 @@ namespace Editor
                 foreach(string file in fileList)
                 {
                     loadCsvData(file);
-                    csvDataGridView.DataSource = dt;
                 }
+                for (int i = 0; i < dataSet.Tables.Count; i++)
+                {
+                    dtFinal.Merge(dataSet.Tables[i]);
+                }
+
+                csvDataGridView.DataSource = dtFinal;
             }
         }
 
@@ -48,7 +57,7 @@ namespace Editor
                 {
                     try
                     {
-
+                        DataTable dt = new DataTable();
                         csvReader.Read();
                         csvReader.ReadHeader();
                         string[] headerRow = csvReader.Context.Reader.HeaderRecord;
@@ -64,6 +73,7 @@ namespace Editor
                         foreach (var record in records)
                         {
                             DataRow dr = dt.NewRow();
+                            
                             int i = 0;
                             foreach (var recordInstance in record)
                             {
@@ -72,11 +82,11 @@ namespace Editor
                             }
                             dt.Rows.Add(dr);
                         }
-
+                       dataSet.Tables.Add(dt);
                     }
-                    catch (Exception)
+                    catch (CsvHelper.BadDataException)
                     {
-                        MessageBox.Show("Please load a csv file.");
+                       MessageBox.Show("Please load a csv file.");
                     }
                 }
             }
@@ -91,7 +101,11 @@ namespace Editor
                 loadCsvData(filename);
             }
 
-            csvDataGridView.DataSource = dt;
+            for(int i = 0; i < dataSet.Tables.Count; i++)
+            {
+                dtFinal.Merge(dataSet.Tables[i]);
+            }
+            csvDataGridView.DataSource = dtFinal;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -119,16 +133,16 @@ namespace Editor
                     using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                     {
                         // Write columns
-                        foreach (DataColumn column in dt.Columns)
+                        foreach (DataColumn column in dtFinal.Columns)
                         {
                             csv.WriteField(column.ColumnName);
                         }
                         csv.NextRecord();
 
                         // Write row values
-                        foreach (DataRow row in dt.Rows)
+                        foreach (DataRow row in dtFinal.Rows)
                         {
-                            for (var i = 0; i < dt.Columns.Count; i++)
+                            for (var i = 0; i < dtFinal.Columns.Count; i++)
                             {
                                 csv.WriteField(row[i]);
                             }
@@ -142,8 +156,9 @@ namespace Editor
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DataTable dt = new DataTable();
-            csvDataGridView.DataSource = dt;
+            dataSet = new DataSet();
+            dtFinal = new DataTable();
+            csvDataGridView.DataSource = dtFinal;
         }
     }
 }
